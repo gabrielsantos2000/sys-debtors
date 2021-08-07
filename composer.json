@@ -1,0 +1,27 @@
+{
+    "name": "gabrielsantos2000/debtors",
+    "description": "A system to manage debts of debtors",
+    "minimum-stability": "stable",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gabriel Oliveira",
+            "email": "oldsgabriel@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "config": {
+        "vendor-dir": "vendor"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "files": [
+            "app/Config/config.php"
+        ]
+    },
+    "require": {
+        "coffeecode/router": "1.0.*"
+    }
+}
