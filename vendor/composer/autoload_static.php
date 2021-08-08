@@ -11,6 +11,10 @@ class ComposerStaticInit03ae077b4a379e324f2450a590cf9e0d
     );
 
     public static $prefixLengthsPsr4 = array (
+        'L' => 
+        array (
+            'League\\Plates\\' => 14,
+        ),
         'C' => 
         array (
             'CoffeeCode\\Router\\' => 18,
@@ -22,6 +26,10 @@ class ComposerStaticInit03ae077b4a379e324f2450a590cf9e0d
     );
 
     public static $prefixDirsPsr4 = array (
+        'League\\Plates\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/league/plates/src',
+        ),
         'CoffeeCode\\Router\\' => 
         array (
             0 => __DIR__ . '/..' . '/coffeecode/router/src',
