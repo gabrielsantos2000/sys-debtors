@@ -1,0 +1,102 @@
+:root {
+    --color-success: #1cc88a;
+    --color-primary: #4e73df;
+    --color-danger: #e74a3b;
+    --color-warning: #f6c23e;
+    --color-gray-800: #5a5c69;
+    --color-gray-300: #dddfeb;
+}
+
+.text-success {
+    color: var(--color-success);
+}
+
+.text-primary {
+    color: var(--color-primary);
+}
+
+.text-danger {
+    color: var(--color-danger);
+}
+
+.text-warning {
+    color: var(--color-warning);
+}
+
+.text-gray-800 {
+    color: var(--color-gray-800);
+}
+
+.text-gray-300 {
+    color: var(--color-gray-300);
+}
+
+.text-uppercase {
+    text-transform: uppercase;
+}
+
+.font-weight-bold {
+    font-weight: 700;
+}
+
+.font-size-medium {
+    font-size: 0.875rem;
+}
+
+.no-gutters {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.border-left-success {
+    border-left: 0.25rem solid var(--color-success);
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid var(--color-primary);
+}
+
+.border-left-danger {
+    border-left: 0.25rem solid var(--color-danger);
+}
+
+.border-left-warning {
+    border-left: 0.25rem solid var(--color-warning) !important;
+}
+
+.border-left-dark {
+    border-left: 0.25rem solid var(--color-gray-800);
+}
+
+.py-2 {
+    padding-top: 0.5rem;
+}
+
+.py-3 {
+    padding-top: 1rem;
+}
+
+.shadow {
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+}
+
+.text-animation {
+    animation: go-back 1s;
+}
+
+.icon-animation {
+    animation: go-back 1s;
+}
+
+@keyframes go-back {
+    from {
+        transform: translateX(-100px);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
