@@ -1,4 +1,4 @@
-<?=$this->layout('../base', ["title" => "Sys Debtors", "title2" => "Dashboard"])?>
+<?=$this->layout('../base', ["title" => "Sys Debtors - Dashboard", "titleSection" => "Dashboard"])?>
 
 <?php $this->start('container') ?>
 

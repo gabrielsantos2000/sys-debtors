@@ -12,7 +12,7 @@ class Debtor
     /** @var string */
     private $table = "tb_devedor";
     
-    public function __construct($dbConfig)
+    public function __construct()
     {
         $this->crud = new Crud(DB_CONFIG);
     }
