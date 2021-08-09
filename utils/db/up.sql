@@ -2,10 +2,10 @@
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema db_devedores
+-- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Schema db_devedores
@@ -39,14 +39,14 @@ CREATE TABLE IF NOT EXISTS `db_devedores`.`tb_devedor` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `nm_devedor` VARCHAR(100) NOT NULL,
   `dt_nascimento` DATE NOT NULL,
-  `nr_cpf_cnpj` VARCHAR(14) NOT NULL,
+  `nr_cpf_cnpj` INT(14) NOT NULL,
   `ic_ativo` TINYINT(1) NOT NULL,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `cpf_cnpj_unique` (`nr_cpf_cnpj` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 11
 DEFAULT CHARACTER SET = utf8mb4;
 
 
@@ -76,6 +76,7 @@ CREATE TABLE IF NOT EXISTS `db_devedores`.`tb_divida` (
   `dt_divida` DATETIME NOT NULL,
   `dt_vencimento` DATETIME NOT NULL,
   `id_natureza_divida` INT(11) NOT NULL,
+  `ic_ativo` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` DATETIME NOT NULL,
   `updated_at` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
