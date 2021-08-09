@@ -27,3 +27,11 @@ while($dirRouteName = readdir($routes)) {
         include_once $pathRoutes.$dirRouteName;
     }
 }
+
+$router->dispatch();
+
+$router->group("ops");
+
+if($router->error()){
+    $router->redirect("/ops/{$router->error()}");
+}

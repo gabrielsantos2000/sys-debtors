@@ -1,7 +1,7 @@
 <?php
 
 /** Definindo a URL BASE do sistema */
-$baseUrl = $_SERVER['URL_WWW'] ?? "http://localhost:80/";
+$baseUrl = $_SERVER['URL_WWW'] ?? "http://localhost:80/sys-debtors/";
 define("BASE_URL", $baseUrl);
 
 /** Adicionando os caminhos relativos do sistema */
