@@ -1,7 +1,7 @@
-<?=$this->layout('../base', ["title" => "Sys Debtors - Novo Devedor", "titleSection" => "Devedor"])?>
+<?=$this->layout('../layouts/base', ["title" => "Sys Debtors - Novo Devedor", "titleSection" => "Devedor"])?>
 
 <?php $this->push('scripts') ?>
-    <script src="<?=$this->e($url)?>public/assets/js/debtors.js"></script>
+    <script src="<?=BASE_URL?>public/assets/js/debtors.js"></script>
 <?php $this->end() ?>
 
 <?php $this->start('container') ?>
@@ -55,7 +55,7 @@
                     <div class="row mt-3">
                         <div class="col-xl-6 col-sm-12">
                             <label for="nm_estado">Estado</label>
-                            <select id="nm_estado" name="nm_estado" class="form-select form-select mb-3">
+                            <select id="nm_estado" name="id_estado" class="form-select form-select mb-3">
                                 <option value="0" selected>Selecione um estado</option>
                                 <option value="1">São Paulo</option>
                                 <option value="2">Rio de Janeiro</option>
@@ -64,7 +64,7 @@
                         </div>
                         <div class="col-xl-6 col-sm-12">
                             <label for="nm_cidade">Cidade</label>
-                            <select id="nm_cidade" name="nm_cidade" class="form-select form-select mb-3">
+                            <select id="nm_cidade" name="id_cidade" class="form-select form-select mb-3">
                                 <option value="0" selected>Selecione uma cidade</option>
                                 <option value="1">Santos</option>
                                 <option value="2">São Vicente</option>
@@ -75,7 +75,7 @@
                     <div class="row mt-3">
                         <div class="col-xl-12">
                             <button type="submit" class="btn btn-primary float-end ms-2">Cadastrar</button>
-                            <a href="<?=$this->e($url)?>" class="btn btn-outline-danger float-end">Cancelar</a>
+                            <a href="<?=BASE_URL?>" class="btn btn-outline-danger float-end">Cancelar</a>
                         </div>
                     </div>
                 </form>

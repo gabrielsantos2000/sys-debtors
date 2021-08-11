@@ -20,7 +20,7 @@ class Debtor
     /**
      * Return a list of debtors.
      * 
-     * @return array 
+     * @return array|\Exception
      */
     public function findAll() : array
     {
@@ -35,6 +35,7 @@ class Debtor
      * Find a debtor by id.
      * 
      * @param int $debtorId : debtor id.
+     * @return array|\Exception
      */
     public function findById(int $debtorId) : array
     {
@@ -51,13 +52,13 @@ class Debtor
      * Save a new debtor
      * 
      * @param array $data : array with debtor data.
-     * @return bool
+     * @return int|bool|\Exception
      */
-    public function insert(array $data) : bool
+    public function insert(array $data) : ?int
     {
         try {
             if($this->crud->insert($this->table, $data))
-                return true;
+                return $this->crud->lastId();
             return false;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
@@ -69,7 +70,7 @@ class Debtor
      * 
      * @param int $debtorId
      * @param array $data : array with debtor data to update.
-     * @return bool
+     * @return bool|\Exception
      */
     public function update(int $debtorId, array $data) : bool
     {
@@ -85,6 +86,7 @@ class Debtor
     /**
      * Delete a existing debtor
      * @param int $debtorId
+     * @return bool|\Exception
      */
     public function delete(int $debtorId) : bool
     {
@@ -100,7 +102,8 @@ class Debtor
     /**
      * Checks if there is cpf or cnpj registered in the system.
      * 
-     * @return bool
+     * @param string $cpfOrCnpj
+     * @return bool\Exception
      */
     public function findByCpfOrCnpj(string $cpfOrCnpj) : bool
     {

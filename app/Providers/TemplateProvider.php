@@ -7,24 +7,28 @@ use \League\Plates\Engine;
 class TemplateProvider
 {
     /** @var string */
-    private $template;
+    private $engine;
 
     /** @var string */
     private $msg;
+
+    /** @var string */
+    private $typeMessage;
 
     /**
      * Return a template.
      * @return TemplateProvider
      */
+
     public function view(string $template, string $file, array $data = []): TemplateProvider
     {
-        $this->template = $this->template = new Engine(__DIR__.'/../../views/templates/'.$template.'/');
+        $this->engine = new Engine(__DIR__.'/../../views/templates/'.$template.'/');
 
         if($this->msg != "") {
-            $this->template->addData(['msg' => $this->msg]);
+            $this->engine->addData(['msg' => $this->msg]);
         }
 
-        echo $this->template->render($file, $data);
+        echo $this->engine->render($file, $data);
         return $this;
     }
 
@@ -33,9 +37,10 @@ class TemplateProvider
      * @param string $msg
      * @return string
      */
-    public function message($msg): TemplateProvider
+    public function message(string $typeMessage = "default", string $msg): TemplateProvider
     {
         $this->msg = $msg;
+        $this->typeMessage = $typeMessage;
         return $this;
     }
 }

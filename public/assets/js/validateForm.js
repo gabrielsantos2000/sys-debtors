@@ -17,14 +17,28 @@ class ValidateForm {
     }
 
     isNull(element) {
-        if(element.val() != "0" || element.val().length === 0)
-            this.erros++;
+        console.log(element)
+        if(element.val() == "0" || element.val().length === 0)
+            this.setErors(1);
     }
 
     canSubmit() {
-        if(this.erros === 0)
+        if(this.getErros() === 0)
             return true;
         return false;
+    }
+
+    setErors(erro) { 
+        this.erros += erro;
+    }
+
+    getErros() {
+        return this.erros;
+    }
+
+    resetErros()
+    {
+        this.erros = 0;
     }
 
     alert(msg){
