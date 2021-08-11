@@ -13,19 +13,18 @@ $(document).ready(function() {
         $(this)[0].submit();
     });
     
-    validateForm.maskCpfCnpj('#nr_cpf_cnpj');
-    validateForm.onlyNumbers('#nr_logradouro');
+    $('#vl_divida').mask('000.000,00', {reverse: true});
 });
 
 function checkForm() {
+    validateForm.resetErros();
+
     validateForm.isNull($("#nm_titulo"));
     validateForm.isNull($("#nm_devedor"));
-    validateForm.isNull($("#nr_cpf_cnpj"));
     validateForm.isNull($("#vl_divida"));
     validateForm.isNull($("#dt_divida"));
     validateForm.isNull($("#dt_vencimento"));
     validateForm.isNull($("#nm_natureza"));
-    validateForm.isNull($("#ds_titulo"));
 
     if(validateForm.canSubmit()) 
         return true;

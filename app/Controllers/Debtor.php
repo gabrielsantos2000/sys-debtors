@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\Debtor as DebtorModel;
+use App\Models\Address as AddressModel;
+use App\Models\ItemStateCity as ItemStateCityModel;
+use App\Models\Dashboard as DashboardModel;
 
 use App\Providers\TemplateProvider;
 
@@ -20,7 +23,10 @@ class Debtor
     public function __construct()
     {
         $this->debtorModel = new DebtorModel();
+        $this->addressModel = new AddressModel();
+        $this->itemStateCityModel = new ItemStateCityModel();
         $this->template = new TemplateProvider();
+        $this->dashboardModel = new DashboardModel();
     }
 
     /**
@@ -39,15 +45,7 @@ class Debtor
      */
     public function create()
     {
-        return $this->template->view('debtors', 'new', ['url' => BASE_URL]);
-    }
-
-    /**
-     * 
-     */
-    public function show()
-    {   
-
+        return $this->template->view('debtors', 'new');
     }
 
     /**
@@ -55,7 +53,19 @@ class Debtor
      */
     public function dashboard()
     {
-        return $this->template->view('dashboard', 'index');
+        $allDebts = $this->dashboardModel->fetchAllDebts()['allDebts'];
+        $currentDebts = $this->dashboardModel->fetchCurrentDebts()['currentDebts'];
+        $nextDebts = $this->dashboardModel->fetchNextDebts()['nextDebts'];
+        $lastDebt = $this->dashboardModel->findLastDebt()['lastDebt'];
+
+        return $this->template->view('dashboard', 'index', [
+            'countDebts'=>[
+                'allDebts' => $allDebts,
+                'currentDebts' => $currentDebts, 
+                'nextDebts' => $nextDebts,
+                'lastDebt' => $lastDebt
+            ]
+        ]);
     }
 
     /**
@@ -66,11 +76,11 @@ class Debtor
     public function store(array $data)
     {
         if(empty($data))
-            return $this->template->message('Verifique se você preencheu todos os campos.')->view('debtors', 'index');
+            return $this->template->message('info', 'Verifique se você preencheu todos os campos.')->view('debtors', 'index');
 
         $isRegistred = $this->debtorModel->findByCpfOrCnpj($data['nr_cpf_cnpj']);
         if($isRegistred)
-            return $this->template->message('Já existe esse cpf/cnpj cadastrado no sistema.')->view('debtors', 'new');
+            return $this->template->message('info', 'Já existe esse cpf/cnpj cadastrado no sistema.')->view('debtors', 'new');
 
         $storeDebtor = [];
 
@@ -80,10 +90,25 @@ class Debtor
         $storeDebtor['ic_ativo'] = 1;
         $storeDebtor['created_at'] = date('Y-m-d H:i:s');
 
-        $this->debtorModel->insert($storeDebtor);
+        if($debtorId = $this->debtorModel->insert($storeDebtor)) {
 
-        return $this->template->message('Devedor cadastrado com sucesso!')
-                ->view('dashboard', 'index');
+            $stateCityId = $this->itemStateCityModel->findStateAndCityId($data['id_estado'], $data['id_cidade']);
+            if(!empty($stateCityId)) {
+                $storeAddress = [];
+                $storeAddress['nm_logradouro'] = $data['nm_logradouro'];
+                $storeAddress['nr_logradouro'] = $data['nr_logradouro'];
+                $storeAddress['nm_bairro'] = $data['nm_bairro'];
+                $storeAddress['id_estado_cidade'] = $stateCityId;
+                $storeAddress['id_devedor'] = $debtorId;
+
+                if($this->addressModel->insert($storeAddress))
+                    return $this->template->message('success', 'Devedor cadastrado com sucesso!')->view('dashboard', 'index');
+                else
+                    $this->debtorModel->delete($debtorId);
+            }
+        }
+
+        return $this->template->message('error', 'Problemas ao cadastrar novo devedor!')->view('debtors', 'new');
     }
 
     /**

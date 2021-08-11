@@ -18,6 +18,8 @@ $(document).ready(function() {
 });
 
 function checkForm() {
+    validateForm.resetErros();
+    
     $("#nr_cpf_cnpj").val(
         validateForm.sanitizeCpfCnpj( 
             $("#nr_cpf_cnpj").val() 

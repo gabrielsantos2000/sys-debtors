@@ -1,0 +1,21 @@
+.card-cad {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 10px 0;
+}
+
+.card-cad > img {
+    width: 40px;
+    height: 40px;
+}
+
+.card-cad > p {
+    text-align: center;
+}
+
+.card-cad:hover {
+    cursor: pointer;
+}
