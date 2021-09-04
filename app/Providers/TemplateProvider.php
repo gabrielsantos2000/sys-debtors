@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use \League\Plates\Engine;
+use CoffeeCode\Router\Router;
 
 class TemplateProvider
 {
@@ -15,10 +16,18 @@ class TemplateProvider
     /** @var string */
     private $typeMessage;
 
+    /** @var instance */
+    private $router;
+
     /**
      * Return a template.
      * @return TemplateProvider
      */
+
+    public function __construct()
+    {
+        $this->router = new Router(BASE_URL);
+    }
 
     public function view(string $template, string $file, array $data = []): TemplateProvider
     {

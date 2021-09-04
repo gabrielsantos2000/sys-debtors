@@ -11,6 +11,18 @@ class Debtor
 
     /** @var string */
     private $table = "tb_devedor";
+
+    /** @var string */
+    private $table_endereco = "tb_endereco";
+
+    /** @var string */
+    private $table_item_cidade_estado = "tb_item_cidade_estado";
+
+    /** @var string */
+    private $table_estado = "tb_estado";
+
+    /** @var string */
+    private $table_cidade = "tb_cidade";
     
     public function __construct()
     {
@@ -25,7 +37,24 @@ class Debtor
     public function findAll() : array
     {
         try {
-            return ($this->crud->query("SELECT * FROM {$this->table} WHERE ic_ativo = 1"));
+            $debtors = $this->crud->query(
+                "SELECT devedor.id, devedor.nm_devedor, devedor.nr_cpf_cnpj, endereco.nm_logradouro,
+                endereco.nr_logradouro, endereco.nm_bairro, estado.sg_estado, cidade.nm_cidade
+                FROM {$this->table} AS devedor
+                    INNER JOIN {$this->table_endereco} AS endereco
+                        ON devedor.id = endereco.id_devedor
+                    INNER JOIN {$this->table_item_cidade_estado} AS estado_cidade
+                        ON endereco.id_estado_cidade = estado_cidade.id
+                    INNER JOIN {$this->table_estado} AS estado
+                        ON estado_cidade.id_estado = estado.id
+                    INNER JOIN {$this->table_cidade} AS cidade
+                        ON estado_cidade.id_cidade = cidade.id
+                WHERE ic_ativo = 1
+                GROUP BY endereco.id_devedor
+                ORDER BY devedor.nm_devedor"
+            );
+
+            return count($debtors) > 0 ? $debtors : [];
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -40,7 +69,7 @@ class Debtor
     public function findById(int $debtorId) : array
     {
         try {
-            $debtor = $this->crud->query("SELECT * FROM {$this->table} WHERE id = {$debtorId}");
+            $debtor = $this->crud->query("SELECT * FROM {$this->table} WHERE id = {$debtorId} AND ic_ativo = 1");
 
             return count($debtor) > 0 ? $debtor : [];
         } catch (\Exception $e) {

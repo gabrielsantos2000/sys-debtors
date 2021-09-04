@@ -6,6 +6,8 @@ use CoffeeCode\Router\Router;
 use App\Models\Debtor as DebtorModel;
 use App\Database\Connection;
 
+use App\Ajax\AjaxTransaction;
+
 $router = new Router(BASE_URL);
 
 /** Cntrollers */

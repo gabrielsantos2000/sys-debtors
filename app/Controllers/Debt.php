@@ -25,20 +25,15 @@ class Debt
     /** @var instance */
     private $template;
 
-    /** @var instance */
-    private $router;
-
     /**
      * @param $dbConfig basic database settings.
      */
-    public function __construct($router)
+    public function __construct()
     {
         $this->debtModel = new DebtModel();
         $this->debtorModel = new DebtorModel();
         $this->itemDebtorDebtModel = new ItemDebtorDebtModel();
         $this->template = new TemplateProvider();
-        
-        $this->router = $router;
     }
 
     /**
@@ -160,4 +155,21 @@ class Debt
 
         return $this->template->message("info", "Verifique se você preencheu todos os campos.")->view('debt', 'index');
     }
+
+    /**
+     * Deletes a existing debt.
+     *
+     * @param array $data
+     */
+    public function destroy($data)
+    {
+        if(!is_null($data['debtid']) && is_numeric($data['debtid'])) {
+            if($this->debtModel->delete($data['debtid'])) 
+                return $this->template->message("success","Dívida deletada com sucesso!")->view('debt', 'index');
+        }
+
+        return $this->template->message("error", "Erro ao deletar dívida para o devedor.")->view('debt', 'index');
+
+    }
+
 }

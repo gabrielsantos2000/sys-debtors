@@ -26,9 +26,9 @@ class Dashboard
     /**
      * Search all active debts in the system
      * 
-     * @return array|\Exception
+     * @return float|\Exception
      */
-    public function fetchAllDebts(): ?array
+    public function fetchAllDebts(): ?float
     {
         try {
             $allDebts = $this->crud->query(
@@ -38,11 +38,14 @@ class Dashboard
                         ON item.id_devedor = debtor.id
                     LEFT JOIN {$this->table_divida} AS debt
                         ON debt.id = item.id_divida
-                    WHERE debtor.ic_ativo = 1 
-                    AND debt.ic_ativo = 1"
-                );
-            
-            return count($allDebts) > 0 ? $allDebts[0]: [];
+                WHERE debtor.ic_ativo = 1 
+                AND debt.ic_ativo = 1"
+            );
+
+            $paidDebts = $this->fetchPaidDebts();
+            $allDebts = $allDebts[0]['allDebts'] - $paidDebts;
+
+            return $allDebts > 0 ? $allDebts : 0;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -51,9 +54,9 @@ class Dashboard
     /**
      * Search the current month's current debts.
      * 
-     * @return array|\Exception
+     * @return float|\Exception
      */
-    public function fetchCurrentDebts(): ?array
+    public function fetchCurrentDebts(): ?float
     {
         try {
             $currentDebts = $this->crud->query(
@@ -65,11 +68,11 @@ class Dashboard
                         ON debt.id = item.id_divida
                     WHERE debtor.ic_ativo = 1
                     AND debt.ic_ativo = 1
-                    AND debt.dt_divida <= debt.dt_vencimento
+                    AND debt.dt_vencimento >= DATE(NOW())
                     AND month(debt.dt_vencimento) = month(NOW())"
             );
-            
-            return count($currentDebts) > 0 ? $currentDebts[0] : [];
+
+            return count($currentDebts) > 0 ? $currentDebts[0]['currentDebts'] : 0;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -78,9 +81,9 @@ class Dashboard
     /**
      * Search the next debts.
      * 
-     * @return array|\Exception
+     * @return float|\Exception
      */
-    public function fetchNextDebts(): ?array
+    public function fetchNextDebts(): ?float
     {
         try {
             $nextDebts = $this->crud->query(
@@ -95,7 +98,33 @@ class Dashboard
                     AND month(debt.dt_vencimento) > month(NOW())"
             );
             
-            return count($nextDebts) > 0 ? $nextDebts[0] : [];
+            return count($nextDebts) > 0 ? $nextDebts[0]['nextDebts'] : [];
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+    /**
+     * Search for paid debts.
+     * 
+     * @return float|\Exception
+     */
+    public function fetchPaidDebts(): ?float
+    {
+        try {
+            $paidDebts = $this->crud->query(
+                "SELECT SUM(debt.vl_divida) as paidDebts
+                FROM {$this->table_item_divida_devedor} AS item
+                    INNER JOIN {$this->table_devedor} AS debtor
+                        ON item.id_devedor = debtor.id
+                    LEFT JOIN {$this->table_divida} AS debt
+                        ON debt.id = item.id_divida
+                    WHERE debtor.ic_ativo = 1
+                    AND debt.ic_ativo = 1
+                    AND debt.dt_vencimento < DATE(NOW())"
+            );
+            
+            return count($paidDebts) > 0 ? $paidDebts[0]['paidDebts'] : 0;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }
@@ -104,9 +133,9 @@ class Dashboard
     /**
      * Search for the last debt.
      * 
-     * @return array|\Exception
+     * @return float|\Exception
      */
-    public function findLastDebt(): ?array
+    public function findLastDebt(): ?float
     {
         try {
             $lastDebt = $this->crud->query(
@@ -118,10 +147,10 @@ class Dashboard
                         ON debt.id = item.id_divida
                     WHERE debtor.ic_ativo = 1
                     AND debt.ic_ativo = 1
-                    ORDER BY debt.id LIMIT 1"
+                    ORDER BY debt.id DESC LIMIT 1"
             );
             
-            return count($lastDebt) > 0 ? $lastDebt[0] : [];
+            return count($lastDebt) > 0 ? $lastDebt[0]['lastDebt'] : 0;
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
         }

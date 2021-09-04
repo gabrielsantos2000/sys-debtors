@@ -5,7 +5,7 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema db_devedores
 -- -----------------------------------------------------
 -- -----------------------------------------------------
 -- Schema db_devedores
@@ -176,12 +176,12 @@ CREATE TABLE IF NOT EXISTS `db_devedores`.`tb_item_divida_devedor` (
   CONSTRAINT `fk_divida`
     FOREIGN KEY (`id_divida`)
     REFERENCES `db_devedores`.`tb_divida` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_item_divida_devedor`
     FOREIGN KEY (`id_devedor`)
     REFERENCES `db_devedores`.`tb_devedor` (`id`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4;

@@ -138,7 +138,7 @@
                                 class="btn btn-primary float-end ms-2">
                                 <?= isset($debtId) ? "Editar" : "Cadastrar" ?>
                             </button>
-                            <a href="<?=BASE_URL?>" class="btn btn-outline-danger float-end">Cancelar</a>
+                            <a href="<?=BASE_URL?>dividas" class="btn btn-outline-danger float-end">Voltar</a>
                         </div>
                     </div>
                 </form>

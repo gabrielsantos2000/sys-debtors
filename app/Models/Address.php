@@ -36,15 +36,17 @@ class Address
     {
         try {
             $address = $this->crud->query(
-                "SELECT id, nm_logradouro, nr_logradouro, estado.sg_estado, cidade.nm_cidade
+                "SELECT endereco.id, endereco.nm_logradouro, endereco.nr_logradouro, endereco.nm_bairro, 
+                estado.sg_estado, cidade.nm_cidade, estado.id as stateId, cidade.id as cityId
                 FROM {$this->table} AS endereco
-                    INNER JOIN endereco.id_estado_cidade
-                        ON {$this->table_item_cidade_estado}.id cidade_estado
+                    INNER JOIN {$this->table_item_cidade_estado} AS estado_cidade
+                        ON endereco.id_estado_cidade = estado_cidade.id
                     INNER JOIN {$this->table_estado} AS estado
-                        ON cidade_estado.id_estado = estado.id
+                        ON estado_cidade.id_estado = estado.id
                     INNER JOIN {$this->table_cidade} AS cidade
-                        ON cidade_estado.id_cidade = cidade.id
-                WHERE endereco.id_devedor = {$debtorId}"
+                        ON estado_cidade.id_cidade = cidade.id
+                WHERE endereco.id_devedor = {$debtorId}
+                ORDER BY endereco.id DESC LIMIT 1"
             );
 
             return count($address) > 0 ? $address : [];

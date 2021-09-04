@@ -1,12 +1,11 @@
 <?php
 
-use App\Controllers\Debtor as DebtorController;
-
 $router->group("devedores");
 
 $router->get("/", "Debtor:index");
-$router->get("/{debtorid}", "Debtor:findById");
 $router->get("/create", "Debtor:create");
 $router->post("/", "Debtor:store");
-$router->put("/{debtorid}", "Debtor:edit");
-$router->delete("/{debtorid}", "Debtor:destroy");
+$router->get("/edit/{debtorid}", "Debtor:edit");
+$router->post("/delete/{id}", "Debt:delete");
+$router->post("/update/{debtorid}", "Debtor:update");
+$router->post("/delete/{debtorid}", "Debtor:destroy");

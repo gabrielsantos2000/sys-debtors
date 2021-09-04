@@ -79,7 +79,7 @@ class ItemStateCity
         try {
             $state = $this->crud->query(
                 "SELECT id, nm_estado, sg_estado FROM {$this->table_estado}
-                WHERE id = {$stateId}"
+                WHERE id = {$stateId} ORDER BY nm_estado"
             );
 
             return count($state) > 0 ? $state : [];
@@ -98,7 +98,7 @@ class ItemStateCity
     {
         try {
             $cities = $this->crud->query(
-                "SELECT cidade.id, cidade.nome FROM {$this->table_cidade}"
+                "SELECT id, nm_cidade FROM {$this->table_cidade} ORDER BY nm_cidade"
             );
 
             return count($cities) > 0 ? $cities : [];
@@ -118,14 +118,15 @@ class ItemStateCity
     {
         try {
             $cities = $this->crud->query(
-                "SELECT cidade.id, cidade.nome FROM {$this->table} item
+                "SELECT cidade.id, cidade.nm_cidade FROM {$this->table} item
                     INNER JOIN {$this->table_estado} estado
                         ON item.id_estado = estado.id
                     INNER JOIN {$this->table_cidade} cidade
                         ON item.id_cidade = cidade.id
-                WHERE item.id_estado = {$stateId} AND item.id_cidade = {$cityId}"
+                WHERE item.id_estado = {$stateId} 
+                ORDER BY cidade.nm_cidade"
             );
-
+            
             return count($cities) > 0 ? $cities : [];
 
         } catch (\Exception $e) {

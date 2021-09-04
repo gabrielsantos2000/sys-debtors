@@ -21,6 +21,12 @@ class Debt
     /** @var string */
     private $table_natureza_divida = "tb_natureza_divida";
 
+    /** @var array */
+    public const PENDING_PAYMENT = '<i class="bi bi-exclamation-circle-fill" style="color: #dc3545; cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Pagamento pendente"></i>';
+
+    /** @var array */
+    public const PAID_OUT = '<i class="bi bi-check-circle-fill" style="color: #20c997; cursor: pointer" data-bs-toggle="tooltip" data-bs-placement="top" title="Paga"></i>';
+
     public function __construct()
     {
         $this->crud = new Crud(DB_CONFIG);
@@ -35,13 +41,25 @@ class Debt
     {
         try {
             $debts = $this->crud->query(
-                "SELECT debtor.nm_devedor, debtor.nr_cpf_cnpj, debt.dt_divida, debt.dt_vencimento
-                FROM {$this->table_item_divida_devedor} AS item
-                    INNER JOIN {$this->table_devedor} AS debtor
-                        ON item.id_devedor = debtor.id
-                    LEFT JOIN {$this->table} AS debt
-                        ON debt.id = item.id_divida
-                    WHERE debtor.ic_ativo = 1");
+                sprintf(
+                    "SELECT debt.id,debtor.nm_devedor, debt.nm_titulo, debtor.nr_cpf_cnpj, 
+                    debt.dt_divida, debt.dt_vencimento, debt.vl_divida,
+                    CASE WHEN 
+                        debt.dt_vencimento >= DATE(NOW())  
+                    THEN '%s'
+                    WHEN 
+                        debt.dt_vencimento < DATE(NOW())
+                    THEN '%s'
+                    END as statusPayment
+                    FROM {$this->table_item_divida_devedor} AS item
+                        INNER JOIN {$this->table_devedor} AS debtor
+                            ON item.id_devedor = debtor.id
+                        LEFT JOIN {$this->table} AS debt
+                            ON debt.id = item.id_divida
+                        WHERE debtor.ic_ativo = 1",
+                        self::PENDING_PAYMENT, self::PAID_OUT
+                    )
+                );
             
             return count($debts) > 0 ? $debts : [];
         } catch (\Exception $e) {
@@ -121,7 +139,7 @@ class Debt
     public function delete(int $debtId): ?bool
     {
         try {
-            if($this->crud->delete($this->table_item_divida_devedor, ["id" => $debtId]));
+            if($this->crud->delete($this->table, ["id" => $debtId]));
                 return true;
             return false;
         } catch (\Exception $e) {

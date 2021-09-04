@@ -45,7 +45,10 @@ class Debtor
      */
     public function create()
     {
-        return $this->template->view('debtors', 'new');
+        $states = $this->itemStateCityModel->findAllStates();
+        $cities = $this->itemStateCityModel->findAllCities();
+
+        return $this->template->view('debtors', 'new', ['states' => $states, 'cities' => $cities]);
     }
 
     /**
@@ -53,17 +56,17 @@ class Debtor
      */
     public function dashboard()
     {
-        $allDebts = $this->dashboardModel->fetchAllDebts()['allDebts'];
-        $currentDebts = $this->dashboardModel->fetchCurrentDebts()['currentDebts'];
-        $nextDebts = $this->dashboardModel->fetchNextDebts()['nextDebts'];
-        $lastDebt = $this->dashboardModel->findLastDebt()['lastDebt'];
+        $allDebts = $this->dashboardModel->fetchAllDebts();
+        $currentDebts = $this->dashboardModel->fetchCurrentDebts();
+        $nextDebts = $this->dashboardModel->fetchNextDebts();
+        $paidDebts = $this->dashboardModel->fetchPaidDebts();
 
         return $this->template->view('dashboard', 'index', [
             'countDebts'=>[
                 'allDebts' => $allDebts,
                 'currentDebts' => $currentDebts, 
                 'nextDebts' => $nextDebts,
-                'lastDebt' => $lastDebt
+                'paidDebts' => $paidDebts
             ]
         ]);
     }
@@ -114,16 +117,83 @@ class Debtor
     /**
      * Edit a existing debtor.
      */
-    public function edit()
+    public function edit($debtorId)
     {
+        if(!is_null($debtorId['debtorid']) && is_numeric($debtorId['debtorid'])) {
+            $debtorId = $debtorId['debtorid'];
+            $debtor = $this->debtorModel->findById($debtorId);
 
+            if(!empty($debtor)) {
+                $debtorAddress = $this->addressModel->find($debtorId);
+
+                $states = $this->itemStateCityModel->findAllStates();
+                $cities = $this->itemStateCityModel->findAllCities();
+
+                return $this->template->view('debtors', 'new', [
+                    'debtor' => $debtor, 
+                    'address' => $debtorAddress,
+                    'states' => $states,
+                    'cities' => $cities
+                ]);
+            }
+        }
+
+        return $this->template->message("error", "Erro ao buscar devedor.")->view('dashboard', 'index');
     }
 
     /**
      * Update a existing debtor.
      */
-    public function update()
+    public function update($data)
     {
+        if(!is_null($data['debtorid']) && is_numeric($data['debtorid'])) {
+            $debtorId = $data['debtorid'];
+            $debtor = $this->debtorModel->findById($debtorId);
 
+            if(!empty($debtor)) {
+                $editDebtor = [];
+                $editDebtor['nm_devedor'] = $data['nm_devedor'];
+                $editDebtor['dt_nascimento'] = $data['dt_nascimento'];
+                $editDebtor['nr_cpf_cnpj'] = $data['nr_cpf_cnpj'];
+                $editDebtor['updated_at'] = date('Y-m-d H:i:s');
+
+                if($this->debtorModel->update($debtorId, $editDebtor)) {
+                    $stateCityId = $this->itemStateCityModel->findStateAndCityId($data['id_estado'], $data['id_cidade']);
+
+                    if(!empty($stateCityId)) {
+                        $editOrStoreAddress = [];
+                        $editOrStoreAddress['nm_logradouro'] = $data['nm_logradouro'];
+                        $editOrStoreAddress['nr_logradouro'] = $data['nr_logradouro'];
+                        $editOrStoreAddress['nm_bairro'] = $data['nm_bairro'];
+                        $editOrStoreAddress['id_estado_cidade'] = $stateCityId;
+
+                        $debtorAddress = $this->addressModel->find($debtorId);
+                        if(empty($debtorAddress))  {
+                            $editOrStoreAddress['id_devedor'] = $debtorId;
+                            $this->addressModel->insert($editOrStoreAddress);
+                        } else {
+                            $this->addressModel->update($debtorAddress[0]['id'], $editOrStoreAddress);
+                        }
+                    }
+
+                    return $this->template->message("success","Devedor editada com sucesso!")->view('dashboard', 'index');
+                }
+                
+                return $this->template->message("error", "Erro ao editar devedor para o devedor.")->view('debtor', 'new');
+            }
+
+            return $this->template->message("warning", "Devedor não encontratada no sistema.")->view('debtor', 'index');
+        }
+
+        return $this->template->message("info", "Verifique se você preencheu todos os campos.")->view('debtor', 'index');
+    }
+
+    /**
+     * Deletes a existing debtor.
+     */
+    public function destroy($idDebtor)
+    {
+        if(empty($idDebtor)) 
+            return $this->template->message("error", "Erro ao deletar devedor.")->view('dashboard', 'index');
     }
 }

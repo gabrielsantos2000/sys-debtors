@@ -4,11 +4,6 @@
     <link rel="stylesheet" href="<?=BASE_URL?>public/assets/css/components/card_cad.css"></link>
 <?php $this->end() ?>
 
-<?php $this->push('scripts') ?>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript" src="<?=BASE_URL?>public/assets/js/charts.js"></script>
-<?php $this->end() ?>
-
 <?php
 
 if(isset($this->data['countDebts'])) {
@@ -16,7 +11,7 @@ if(isset($this->data['countDebts'])) {
     $allDebts = $debts['allDebts'];
     $currentDebts = $debts['currentDebts'];
     $nextDebts = $debts['nextDebts'];
-    $lastDebt = $debts['lastDebt'];
+    $paidDebts = $debts['paidDebts'];
 }
 
 ?>
@@ -33,7 +28,7 @@ if(isset($this->data['countDebts'])) {
                             Total de dívidas
                         </div>
                         <div class="h2 mb-0 font-weight-bold text-gray-800 text-animation">
-                            R$ <?= $allDebts ?>
+                            R$ <?= $allDebts ?? "0.00" ?>
                         </div>
                     </div>
                 </div>
@@ -47,7 +42,7 @@ if(isset($this->data['countDebts'])) {
                             Dívida atual
                         </div>
                         <div class="h2 mb-0 font-weight-bold text-gray-800 text-animation">
-                            R$ <?= $currentDebts ?>
+                            R$ <?= $currentDebts ?? "0.00" ?>
                         </div>
                     </div>
                 </div>
@@ -61,7 +56,7 @@ if(isset($this->data['countDebts'])) {
                             Próximas dívidas
                         </div>
                         <div class="h2 mb-0 font-weight-bold text-gray-800 text-animation">
-                            R$ <?= $nextDebts ?>
+                            R$ <?= $nextDebts ?? "0.00" ?>
                         </div>
                     </div>
                 </div>
@@ -72,13 +67,10 @@ if(isset($this->data['countDebts'])) {
                 <div class="card-body">
                     <div class="col mr-2">
                         <div class="text-xs font-weight-bold text-success text-uppercase text-animation">
-                            Última dívida cadastrada
+                            Total de dívidas pagas
                         </div>
                         <div class="h2 mb-0 font-weight-bold text-gray-800 text-animation">
-                            R$ <?= $lastDebt ?>
-                        </div>
-                        <div class="col-auto">
-                            <i class="bi bi-arrow-up fa-2x text-gray-300 icon-animarion"></i>
+                            R$ <?= $paidDebts ?? "0.00" ?>
                         </div>
                     </div>
                 </div>
@@ -91,23 +83,15 @@ if(isset($this->data['countDebts'])) {
     <h3>Cadastros</h3>
     <div class="row mt-3">
         <?=$this->insert('../layouts/card_cadastros', [
-            "path" => "devedores/create", 
+            "path" => "devedores", 
             "icon" => "person-fill.svg",
             "nameCard" => "Devedor"
         ])?>
         <?=$this->insert('../layouts/card_cadastros', [
-            "path" => "dividas/create", 
+            "path" => "dividas", 
             "icon" => "cash-coin.svg",
             "nameCard" => "Dívida"
         ])?>
-    </div>
-</section>
-
-<section class="container mt-5">
-    <div class="row">
-        <div class="col-xl-6 col-md-12">
-            <div id="chart_div"></div>
-        </div>
     </div>
 </section>
 

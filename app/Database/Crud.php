@@ -31,8 +31,9 @@ class Crud extends Connection
         }
 
         $sql = sprintf("INSERT INTO %s (%s) VALUES (%s)", $table, implode(', ', $keys), implode(', ', $params));
+        
         $query = $this->conn->prepare($sql);
-
+        
         try {
             $query->execute($values);
             return true;
@@ -87,7 +88,7 @@ class Crud extends Connection
         $temp = array_keys($identifiers);
         $lastRecord = end($temp);
 
-        foreach($identifiers as $identifier => $val) {
+        foreach($identifiers as $key => $val) {
             $where .= $key . " = '" . $val . "'";
             if($lastRecord != $key)
                 $where .= "AND ";

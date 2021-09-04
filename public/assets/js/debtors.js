@@ -9,6 +9,12 @@ $(document).ready(function() {
             validateForm.alert("Preencha todos os campos!");
             return false;
         }
+
+        $("#nr_cpf_cnpj").val(
+            validateForm.sanitizeCpfCnpj( 
+                $("#nr_cpf_cnpj").val() 
+            )
+        );
         
         $(this)[0].submit();
     });
@@ -19,12 +25,6 @@ $(document).ready(function() {
 
 function checkForm() {
     validateForm.resetErros();
-    
-    $("#nr_cpf_cnpj").val(
-        validateForm.sanitizeCpfCnpj( 
-            $("#nr_cpf_cnpj").val() 
-        )
-    );
 
     validateForm.isNull($("#nm_devedor"));
     validateForm.isNull($("#dt_nascimento"));
